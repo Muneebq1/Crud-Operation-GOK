@@ -7,17 +7,17 @@ const Products = {
     return response;
   },
   deleteProducts: async (id) => {
-    const endpoint = `${process.env.REACT_APP_PUBLIC_SERVER_URL}/products/${id}`;
+    const endpoint = `${process.env.REACT_APP_PUBLIC_SERVER_URL}/product/${id}`;
     const response = await axios.delete(endpoint);
     return response;
   },
   addProducts: async (product) => {
-    const endpoint = `${process.env.REACT_APP_PUBLIC_SERVER_URL}/products`;
-    return await axios.post(endpoint, { product });
+    const endpoint = `${process.env.REACT_APP_PUBLIC_SERVER_URL}/product`;
+    return await axios.post(endpoint, product);
   },
-  editProducts: async ({ id, product }) => {
-    const endpoint = `${process.env.REACT_APP_PUBLIC_SERVER_URL}/products/${id}`;
-    return await axios.put(endpoint, { product });
+  editProducts: async (id, product) => {
+    const endpoint = `${process.env.REACT_APP_PUBLIC_SERVER_URL}/product/${id}`;
+    return await axios.put(endpoint, product);
   },
 };
 
