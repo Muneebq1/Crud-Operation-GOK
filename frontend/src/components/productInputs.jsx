@@ -5,7 +5,7 @@ const ProductInputs = ({ formik }) => {
   const { values, errors, touched, handleChange, handleSubmit } = formik;
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form style={{ display: "flex", flexDirection: "column", width: "300px" }} onSubmit={handleSubmit}>
       <InputComponent
         productId="productName"
         placeholder="Product Name"

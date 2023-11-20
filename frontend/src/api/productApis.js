@@ -20,5 +20,4 @@ const Products = {
     return await axios.put(endpoint, product);
   },
 };
-
 export default Products;

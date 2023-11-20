@@ -9,22 +9,22 @@ import ProductInputs from '../components/productInputs';
 
 const Home = () => {
   const [products, setProducts] = useState([])
+  const [editingProduct, setEditingProduct] = useState([])
   const [loadProduct, setLoadProduct] = useState(false)
   const [isEditMode, setIsEditMode] = useState(false)
-  const [editingProduct, setEditingProduct] = useState(null)
 
   const getAllProducts = async () => {
     try {
       const response = await Products.getProducts()
-      setProducts(response?.data?.data)
+      setProducts(response?.data)
     } catch (error) {
       console.log("error in getting all products", error);
     }
   }
 
-  const deleteProduct = async (id) => {
+  const deleteProduct = async (productId) => {
     try {
-      await Products.deleteProducts(id)
+      await Products.deleteProducts(productId)
       setLoadProduct(!loadProduct)
 
     } catch (error) {
@@ -32,8 +32,8 @@ const Home = () => {
     }
   }
 
-  const addProduct = (value) => {
-    const response = Products.addProducts({
+  const addProduct = async (value) => {
+    const response = await Products.addProducts({
       name: value.productName,
       price: value.productPrice,
       description: value.productDescription,
@@ -42,8 +42,8 @@ const Home = () => {
     return response
   }
 
-  const editProduct = (value) => {
-    const response = Products.editProducts(editingProduct._id, {
+  const editProduct = async (value) => {
+    const response = await Products.editProducts(editingProduct._id, {
       name: value.productName,
       price: value.productPrice,
       description: value.productDescription,
@@ -52,7 +52,7 @@ const Home = () => {
     return response
   }
 
-  const editMode = (product) => {
+  const handleEdit = (product) => {
     setIsEditMode(!isEditMode)
     setEditingProduct(product)
 
@@ -71,38 +71,27 @@ const Home = () => {
   const formik = useFormik({
     initialValues: INITIAL_VALUE,
     validationSchema: VALIDATION_SCHEMA,
-    onSubmit: async (values) => {
-      try {
-        await addProduct(values);
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    },
+    onSubmit: async (values) => { addProduct(values) }
   });
 
   const editFormik = useFormik({
     initialValues: INITIAL_VALUE,
     validationSchema: VALIDATION_SCHEMA,
-    onSubmit: async (values) => {
-      try {
-        await editProduct(values);
-      } catch (error) {
-        console.error("Error:", error);
-      }
-    },
+    onSubmit: (values) => { editProduct(values) },
   });
   return (
     <div>
       <ProductInputs formik={formik} />
-      {products.map((eachProduct) => (
+      {products?.map((eachProduct) => (
         <div
           key={eachProduct._id}
         >
           <ProductDisplay
             product={eachProduct}
             deleteProduct={deleteProduct}
-            editMode={editMode}
+            editMode={handleEdit}
           />
+          {/* edit inputs */}
           {(isEditMode && editingProduct._id === eachProduct._id) && (
             <ProductInputs formik={editFormik} />
           )}
